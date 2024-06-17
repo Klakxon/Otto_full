@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Otto</title>
+</head>
+<body>
+<h1>Otto</h1>
+<hr>
+<h4>Авторизація</h4>
+<form action="/login" method="post">
+    Email: <input type="email" name="username"><br><br>
+    Пароль: <input type="password" name="password"><br><br>
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    <input type="submit" value="Вхід"/>
+</form>
+<a href="/registration">Зареєструватись</a>
+<div th:if="${param.error}">
+    <h2 style="color: red">Невірний email або пароль.</h2>
+</div>
+</body>
+</html>

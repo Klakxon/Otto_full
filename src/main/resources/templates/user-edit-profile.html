@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Otto</title>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+    </nav>
+</header>
+<h2>Редагувати профіль</h2>
+<!-- Avatar -->
+<div th:if="${user.avatar != null}">
+    <img th:src="@{/images/{id}(id=${user.avatar.getId()})}" alt="User Avatar" height="50px"/>
+</div>
+<form action="#" th:action="@{/user/edit}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    <input type="hidden" name="userId" th:value="${user.id}">
+    <div>
+        <label for="name">Ім'я користувача:</label>
+        <input type="text" id="name" name="name" th:field="*{name}">
+        <br>
+    </div>
+    <div>
+        <label for="phone">Телефон: +38</label>
+        <input type="text" id="phone" name="phone" th:value="${user.phone}">
+        <br>
+    </div>
+    <div>
+        <label for="password">Новий пароль:</label>
+        <input type="password" id="password" name="password" th:field="*{password}">
+        <br>
+    </div>
+    <div>
+        <label for="file">Аватар:</label>
+        <input type="file" id="file" name="file">
+        <br>
+    </div>
+    <div>
+        <input type="submit" value="Зберегти">
+    </div>
+</form>
+</body>
+</html>

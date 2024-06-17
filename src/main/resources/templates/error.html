@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Помилка</title>
+</head>
+<body>
+<h1>Сталася помилка</h1>
+<p th:text="'Код помилки: ' + ${status}"></p>
+<p th:text="'Повідомлення: ' + ${message}"></p>
+<a href="/">Повернутися на головну</a>
+</body>
+</html>

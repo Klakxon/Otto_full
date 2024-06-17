@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Otto</title>
+</head>
+<body>
+<h1><a href="/">Otto</a></h1><hr>
+<h3 th:text="'Редагування користувача ' + ${user.name}">Редагування користувача</h3>
+<form th:action="@{/admin/user/edit}" method="post" enctype="multipart/form-data">
+    Роль користувача
+    <div th:each="role : ${roles}">
+        <label>
+            <input type="radio" name="roles" th:value="${role.name()}" th:checked="${user.roles.contains(role)}">
+            <span th:text="${role.name()}">Role</span>
+        </label>
+    </div>
+    <div>
+        <label for="newPhone">Телефон</label>
+        <input type="text" id="newPhone" name="newPhone" th:value="${user.phone}">
+    </div>
+    <div>
+        <label for="newName">Ім'я</label>
+        <input type="text" id="newName" name="newName" th:value="${user.name}">
+    </div>
+    <div>
+        <label for="newAvatar">Аватар</label>
+        <input type="file" id="newAvatar" name="newAvatar">
+    </div>
+    <input type="hidden" th:value="${user.id}" name="userId">
+    <input type="hidden" th:value="${_csrf.token}" name="_csrf">
+    <button type="submit">Зберегти</button>
+</form>
+</body>
+</html>

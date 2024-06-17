@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otto</title>
+    <style>
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+    </nav>
+</header>
+<h2>Редагування парфуму</h2>
+<form action="/perfumes/update/{id}" method="post" enctype="multipart/form-data">
+    <div>
+        <input type="hidden" name="id" th:value="${perfume.id}"/>
+    </div>
+    <div>
+        <label for="name">Назва:</label>
+        <input type="text" id="name" name="name" th:value="${perfume.name}"/>
+    </div>
+    <div>
+        <label for="producer">Виробник:</label>
+        <input type="text" id="producer" name="producer" th:value="${perfume.producer}"/>
+    </div>
+    <div>
+        <label for="volume">Об'єм:</label>
+        <input type="number" id="volume" name="volume" min="0" th:value="${perfume.volume}"/>
+    </div>
+    <div>
+        <label for="price">Ціна:</label>
+        <input type="number" id="price" name="price" min="0" step="0.01" th:value="${perfume.price}"/>
+    </div>
+    <div>
+        <label for="amount">Кількість:</label>
+        <input type="number" id="amount" name="amount" min="0" th:value="${perfume.amount}"/>
+    </div>
+    <div>
+        <label for="description">Опис:</label>
+        <input type="text" id="description" name="description" th:value="${perfume.description}"/>
+    </div>
+    <div>
+        <label for="sex">Стать</label><br>
+        <div th:each="sexOption : ${T(com.example.Otto.models.enums.Sex).values()}">
+            <input type="radio" id="sex" name="sex" th:value="${sexOption}" th:checked="${sexOption.name() == perfume.sex}">
+            <label th:for="sex" th:text="${sexOption}">Sex Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="aroma">Аромат</label><br>
+        <div th:each="aromaOption : ${T(com.example.Otto.models.enums.Aroma).values()}">
+            <input type="radio" id="aroma" name="aroma" th:value="${aromaOption}" th:checked="${aromaOption.name() == perfume.aroma}">
+            <label th:for="aroma" th:text="${aromaOption}">Aroma Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="saturation">Насиченість</label><br>
+        <div th:each="saturationOption : ${T(com.example.Otto.models.enums.Saturation).values()}">
+            <input type="radio" id="saturation" name="saturation" th:value="${saturationOption}" th:checked="${saturationOption.name() == perfume.saturation}">
+            <label th:for="saturation" th:text="${saturationOption}">Saturation Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="dayTime">Пора дня</label><br>
+        <div th:each="dayTimeOption : ${T(com.example.Otto.models.enums.DayTime).values()}">
+            <input type="radio" id="dayTime" name="dayTime" th:value="${dayTimeOption}" th:checked="${dayTimeOption.name() == perfume.dayTime}">
+            <label th:for="dayTime" th:text="${dayTimeOption}">DayTime Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="specificity">Специфічність</label><br>
+        <div th:each="specificityOption : ${T(com.example.Otto.models.enums.Specificity).values()}">
+            <input type="radio" id="specificity" name="specificity" th:value="${specificityOption}" th:checked="${specificityOption.name() == perfume.specificity}">
+            <label th:for="specificity" th:text="${specificityOption}">Specificity Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="season">Сезон</label><br>
+        <div th:each="seasonOption : ${T(com.example.Otto.models.enums.Season).values()}">
+            <input type="radio" id="season" name="season" th:value="${seasonOption}" th:checked="${seasonOption.name() == perfume.season}">
+            <label th:for="season" th:text="${seasonOption}">Season Option</label>
+        </div>
+    </div>
+    <div>
+        <label for="file1">Фото 1 (головна)</label>
+        <input type="file" id="file1" name="file1"><br><br>
+    </div>
+    <div>
+        <label for="file2">Фото 2</label>
+        <input type="file" id="file2" name="file2"><br><br>
+    </div>
+    <div>
+        <label for="file3">Фото 3</label>
+        <input type="file" id="file3" name="file3"><br><br>
+    </div>
+    <div>
+        <input type="hidden" name="_csrf" value="Редагувати парфум" th:value="${_csrf.token}">
+    </div>
+
+    <div>
+        <input type="submit" value="Зберегти">
+    </div>
+</form>
+</body>
+</html>

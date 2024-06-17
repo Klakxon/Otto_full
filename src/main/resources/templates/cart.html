@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Otto</title>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+    </nav>
+</header>
+<h2>Кошик</h2>
+<div th:if="${cartItems  != null}">
+    <table>
+        <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Ціна</th>
+            <th>Кількість</th>
+            <th>Всього</th>
+            <th>Дії</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td th:text="${item.perfume.name}">Назва</td>
+            <td th:text="${item.perfume.price}">Ціна</td>
+            <td th:text="${item.quantity}">Кількість</td>
+            <td th:text="${item.quantity * item.perfume.price}">Всього</td>
+            <td>
+                <form action="/cart/remove" method="post">
+                    <input type="hidden" name="perfumeId" th:value="${item.perfume.id}">
+                    <button type="submit">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form action="/cart/checkout" method="post">
+        <button type="submit">Оформити замовлення</button>
+    </form>
+</div>
+<div th:if="${cartItems == null}">
+    <p>Кошик порожній</p>
+</div>
+</body>
+</html>

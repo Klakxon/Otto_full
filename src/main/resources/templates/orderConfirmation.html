@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Otto</title>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+    </nav>
+</header>
+<h2>Підтвердження замовлення</h2>
+<div th:if="${order != null}">
+    <p>Дякуємо за ваше замовлення!</p>
+    <p>Замовлення №: <span th:text="${order.id}">ID</span></p>
+    <p>Загальна сума: <span th:text="${order.total}">Total</span></p>
+</div>
+<div th:if="${order == null}">
+    <p>Сталася помилка при оформленні замовлення. Спробуйте ще раз.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/ico1.png" type="image/x-icon">
+    <title>Otto</title>
+    <link rel="stylesheet" href="/css/perfumes.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">Parfum de OTTO</div>
+    <nav>
+        <a href="#">Головна</a>
+        <a href="#">Контакти</a>
+        <a href="#">FAQs</a>
+        <a href="#">Про нас</a>
+        <input type="text" placeholder="Пошук товару...">
+        <div class="user-menu">
+            <img src="path/to/profile-pic.jpg" alt="Профіль">
+            <div class="dropdown">
+                <button class="dropbtn">▼</button>
+                <div class="dropdown-content">
+                    <a href="#">Бот</a>
+                    <a href="#">Налаштування</a>
+                    <a href="#">Профіль</a>
+                    <a href="#">Вийти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+    </nav>
+</header>
+
+<!-- User profile -->
+<div th:if="${user.email}">
+    <!-- User name -->
+    <h3>Ім'я користувача: <i th:text="${user.name}"></i></h3>
+    <!-- Avatar -->
+    <div th:if="${user.avatar != null}">
+        <img th:src="@{/images/{id}(id=${user.avatar.getId()})}" alt="User Avatar" height="50px"/>
+    </div>
+    <!-- Log out-->
+    <form action="/logout" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <input type="submit" value="Вийти">
+    </form>
+    <br>
+    <!-- Edit profile -->
+    <form action="/user/edit" method="get">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <input type="submit" value="Редагувати">
+    </form>
+    <br>
+    <!-- Admin panel-->
+    <div th:if="${user.isAdmin()}">
+        <a href="/admin">Панель адміністратора</a><br><br>
+    </div>
+</div>
+
+<!-- Log in -->
+<div th:unless="${user.email}">
+    <a href="/login">Вхід</a>
+</div>
+
+<!-- Search by name -->
+<div>
+    <form action="/perfumes" method="get">
+        <input type="hidden" name="priceSort" th:value="${priceSort}">
+        <input type="hidden" name="nameSort" th:value="${nameSort}">
+        <input type="text" id="nameSearch" name="nameSearch" placeholder="Пошук за назвою" th:value="${nameSearch}">
+        <button type="submit">Пошук</button>
+    </form>
+    <br>
+</div>
+
+<!-- Sorting by price -->
+Сортувати
+<div>
+    <label for="priceSort">- за ціною:</label>
+    <select id="priceSort" name="priceSort" onchange="updateUrlWithSort(this.value, 'priceSort')">
+        <option value="" th:selected="${priceSort == null}">Без сортування</option>
+        <option value="priceAsc" th:selected="${priceSort == 'priceAsc'}">За зростанням</option>
+        <option value="priceDesc" th:selected="${priceSort == 'priceDesc'}">За спаданням</option>
+    </select>
+</div>
+
+<!-- Sorting by name -->
+<div>
+    <label for="nameSort">- за назвою:</label>
+    <select id="nameSort" name="nameSort" onchange="updateUrlWithSort(this.value, 'nameSort')">
+        <option value="" th:selected="${nameSort == null}">Без сортування</option>
+        <option value="nameAsc" th:selected="${nameSort == 'nameAsc'}">За алфавітом</option>
+        <option value="nameDesc" th:selected="${nameSort == 'nameDesc'}">Проти алфавіту</option>
+    </select>
+</div>
+
+<!-- Filter -->
+<div>
+    <form action="/perfumes" method="get">
+        <input type="hidden" name="priceSort" th:value="${priceSort}">
+        <input type="hidden" name="nameSort" th:value="${nameSort}">
+
+        <!-- Filters -->
+        <div>
+            <label for="producerFilter">Країна виробник</label><br>
+            <div th:each="producerOption : ${allProducers}">
+                <input type="checkbox" id="producerFilter" name="producerFilter" th:value="${producerOption}"
+                       th:checked="${#lists.contains(selectedProducers, producerOption)}">
+                <label th:for="producerFilter" th:text="${producerOption}">Producer Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="volumeFilter">Об'єм</label><br>
+            <div th:each="volumeOption : ${allVolumes}">
+                <input type="checkbox" id="volumeFilter" name="volumeFilter" th:value="${volumeOption}"
+                       th:checked="${#lists.contains(selectedVolumes, volumeOption)}">
+                <label th:for="volumeFilter" th:text="${volumeOption}">Volume Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label>Ціна від:</label>
+            <input type="number" name="priceMinFilter" min="0" step="0.01" th:value="${priceMin}">
+            <label>до</label>
+            <input type="number" name="priceMaxFilter" min="0" step="0.01" th:value="${priceMax}">
+        </div>
+        <div>
+            <label for="sexFilter">Стать</label><br>
+            <div th:each="sexFilter : ${allSexes}">
+                <input type="checkbox" id="sexFilter" name="sexFilter" th:value="${sexFilter}"
+                       th:checked="${#lists.contains(selectedSexes, sexFilter)}">
+                <label th:for="sexFilter" th:text="${sexFilter}">Sex Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="aromaFilter">Аромат</label><br>
+            <div th:each="aromaFilter : ${allAromas}">
+                <input type="checkbox" id="aromaFilter" name="aromaFilter" th:value="${aromaFilter}"
+                       th:checked="${#lists.contains(selectedAromas, aromaFilter)}">
+                <label th:for="aromaFilter" th:text="${aromaFilter}">Aroma Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="saturationFilter">Насиченість</label><br>
+            <div th:each="saturationFilter : ${allSaturations}">
+                <input type="checkbox" id="saturationFilter" name="saturationFilter" th:value="${saturationFilter}"
+                       th:checked="${#lists.contains(selectedSaturations, saturationFilter)}">
+                <label th:for="saturationFilter" th:text="${saturationFilter}">Saturation Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="dayTimeFilter">Пора дня</label><br>
+            <div th:each="dayTimeFilter : ${allDayTimes}">
+                <input type="checkbox" id="dayTimeFilter" name="dayTimeFilter" th:value="${dayTimeFilter}"
+                       th:checked="${#lists.contains(selectedDayTimes, dayTimeFilter)}">
+                <label th:for="dayTimeFilter" th:text="${dayTimeFilter}">DayTime Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="specificityFilter">Специфічність</label><br>
+            <div th:each="specificityFilter : ${allSpecificities}">
+                <input type="checkbox" id="specificityFilter" name="specificityFilter" th:value="${specificityFilter}"
+                       th:checked="${#lists.contains(selectedSpecificities, specificityFilter)}">
+                <label th:for="specificityFilter" th:text="${specificityFilter}">Specificity Filter</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="seasonFilter">Сезон</label><br>
+            <div th:each="seasonFilter : ${allSeasons}">
+                <input type="checkbox" id="seasonFilter" name="seasonFilter" th:value="${seasonFilter}"
+                       th:checked="${#lists.contains(selectedSeasons, seasonFilter)}">
+                <label th:for="seasonFilter" th:text="${seasonFilter}">Season Filter</label><br>
+            </div>
+        </div>
+
+        <button type="submit">Фільтрувати</button>
+        <br>
+        <a href="/perfumes/resetFilters">Скинути фільтри</a>
+    </form>
+</div>
+
+<script>
+    function updateUrlWithSort(value, sortType) {
+        const url = new URL(window.location.href);
+        url.searchParams.set(sortType, value);
+
+        const filters = ['producerFilter', 'volumeFilter', 'priceMinFilter', 'priceMaxFilter', 'sexFilter', 'aromaFilter', 'saturationFilter', 'dayTimeFilter', 'specificityFilter', 'seasonFilter'];
+        filters.forEach(filter => {
+            const elements = document.querySelectorAll(`input[name="${filter}"]`);
+            elements.forEach(el => {
+                if (el.type === 'checkbox' && el.checked) {
+                    url.searchParams.append(filter, el.value);
+                } else if (el.type === 'number' && el.value) {
+                    url.searchParams.set(filter, el.value);
+                }
+            });
+        });
+
+        window.location.href = url.toString();
+    }
+</script>
+
+<!-- Perfume list -->
+<div th:unless="${#lists.isEmpty(perfumes)}">
+    <div class="perfume-grid">
+        <div th:each="perfume : ${perfumes}" class="perfume-block">
+            <img th:src="@{/images/{id}(id=${perfume.previewImageId})}" alt="Perfume Image" height="150px"/>
+            <div class="perfume-name" th:text="${perfume.name}"></div>
+            <div class="perfume-price" th:text="${perfume.price + ' грн'}"></div>
+            <div th:if="${user.email}">
+                <form action="/cart/add" method="post">
+                    <input type="hidden" name="perfumeId" th:value="${perfume.id}">
+                    <input type="number" name="quantity" value="1" min="1">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit">Додати в кошик</button>
+                </form>
+            </div>
+            <a th:href="@{/perfumes/{id}(id=${perfume.id})}">Детальніше</a>
+        </div>
+    </div>
+</div>
+
+<!-- Add perfume form-->
+<div th:if="${user.isAdmin()}">
+    <h2>Додати парфум</h2>
+    <form action="/perfumes/add" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="name">Назва</label>
+            <input type="text" id="name" name="name" required><br><br>
+        </div>
+        <div>
+            <label for="description">Опис</label>
+            <input type="text" id="description" name="description"><br><br>
+        </div>
+        <div>
+            <label for="producer">Країна виробник</label>
+            <input type="text" id="producer" name="producer" required><br><br>
+        </div>
+        <div>
+            <label for="price">Ціна</label>
+            <input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
+        </div>
+        <div>
+            <label for="volume">Об'єм</label>
+            <input type="number" id="volume" name="volume" min="0" required><br><br>
+        </div>
+        <div>
+            <label for="amount">Кількість</label>
+            <input type="number" id="amount" name="amount" min="0" required><br><br>
+        </div>
+        <div>
+            <label for="sex">Стать</label><br>
+            <div th:each="sexOption : ${allSexes}">
+                <input type="radio" id="sex" name="sex" th:value="${sexOption}" required>
+                <label th:for="sex" th:text="${sexOption}">Sex Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="aroma">Аромат</label><br>
+            <div th:each="aromaOption : ${allAromas}">
+                <input type="radio" id="aroma" name="aroma" th:value="${aromaOption}" required>
+                <label th:for="aroma" th:text="${aromaOption}">Aroma Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="saturation">Насиченість</label><br>
+            <div th:each="saturationOption : ${allSaturations}">
+                <input type="radio" id="saturation" name="saturation" th:value="${saturationOption}" required>
+                <label th:for="saturation" th:text="${saturationOption}">Saturation Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="dayTime">Пора дня</label><br>
+            <div th:each="dayTimeOption : ${allDayTimes}">
+                <input type="radio" id="dayTime" name="dayTime" th:value="${dayTimeOption}" required>
+                <label th:for="dayTime" th:text="${dayTimeOption}">DayTime Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="specificity">Специфічність</label><br>
+            <div th:each="specificityOption : ${allSpecificities}">
+                <input type="radio" id="specificity" name="specificity" th:value="${specificityOption}" required>
+                <label th:for="specificity" th:text="${specificityOption}">Specificity Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="season">Сезон</label><br>
+            <div th:each="seasonOption : ${allSeasons}">
+                <input type="radio" id="season" name="season" th:value="${seasonOption}" required>
+                <label th:for="season" th:text="${seasonOption}">Season Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="file1">Фото 1 (головна)</label>
+            <input type="file" id="file1" name="file1" required><br><br>
+        </div>
+        <div>
+            <label for="file2">Фото 2</label>
+            <input type="file" id="file2" name="file2"><br><br>
+        </div>
+        <div>
+            <label for="file3">Фото 3</label>
+            <input type="file" id="file3" name="file3"><br><br>
+        </div>
+        <div>
+            <input type="hidden" name="_csrf" value="Додати парфум" th:value="${_csrf.token}">
+        </div>
+        <div>
+            <input type="submit" value="Додати парфум">
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('perfumeForm').addEventListener('submit', function (event) {
+            const price = document.getElementById('price').value;
+            if (price < 1) {
+                event.preventDefault();
+                alert('Ціна повинна бути не менше 1.00');
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

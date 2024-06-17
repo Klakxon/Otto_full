@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Otto</title>
+    <script>
+        function validatePassword() {
+            const password = document.getElementsByName("password")[0].value;
+            const errorMessage = document.getElementById("passwordErrorMessage");
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,8}$/;
+
+            if (!passwordPattern.test(password)) {
+                errorMessage.innerHTML = "Пароль повинен бути від 4 до 8 символів, мати хоча б одну цифру, одну велику літеру, одну малу літеру та один спеціальний символ.";
+                return false;
+            }
+            errorMessage.innerHTML = "";
+            return true;
+        }
+    </script>
+</head>
+<body>
+<h1>Otto</h1>
+<hr>
+<h4>Реєстрація</h4>
+<form action="/registration" method="post" enctype="multipart/form-data" onsubmit="return validatePassword()">
+    <div>
+        <label for="file">Аватар:</label>
+        <input type="file" id="file" name="file"><br><br>
+    </div>
+    <div>
+        <label for="name">Ім'я користувача:</label>
+        <input type="text" id="name" name="name" required><br><br>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+    </div>
+    <div>
+        <label for="phone">Телефон: (+38)</label>
+        <input type="text" id="phone" name="phone" required><br><br>
+    </div>
+    <div>
+        <label style="color: #555555"><b>Вимоги до пароля:</b><br>
+            - повинен бути від 4 до 8 символів,<br>
+            - мати хоча б одну цифру, одну велику літеру,<br>
+            - одну малу літеру та один спеціальний символ.</label><br><br>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required><br><br>
+    </div>
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    <input type="submit" value="Зареєструватись"/>
+</form>
+<div id="passwordErrorMessage" style="color: red;"></div>
+<div th:if="${errorMessage}">
+    <h2 style="color: red" th:text="${errorMessage}">error</h2>
+</div>
+</body>
+</html>

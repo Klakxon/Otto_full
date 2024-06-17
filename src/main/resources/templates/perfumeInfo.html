@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/ico1.png" type="image/x-icon">
+    <title>Otto</title>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+        <h2>Детальна інформація</h2>
+    </nav>
+</header>
+<div id="content">
+    <div class="perfume-details">
+        <div th:if="${not #lists.isEmpty(imageUrls)}">
+            <img th:each="imageUrl : ${imageUrls}" th:src="${imageUrl}" height="300px"><br>
+        </div>
+        <div th:if="${#lists.isEmpty(imageUrls)}">
+            <p>Зображення відсутнє</p>
+        </div>
+        <h2 th:text="${perfume.name}">Назва парфуму</h2>
+        <b>Країна виробник: <span th:text="${perfume.producer}">Країна виробник</span></b>
+        <b>Об'єм: <span th:text="${perfume.volume + ' мл'}">Об'єм</span></b>
+        <b>Ціна: <span th:text="${perfume.price + ' грн'}">Ціна</span></b>
+        <b th:if="${user.isAdmin()}">Кількість: <span th:text="${perfume.amount}">Кількість</span></b>
+
+        <!-- Delete perfume -->
+        <form th:if="${user.isAdmin()}" th:action="@{/perfumes/delete/{id}(id=${perfume.id})}" method="post">
+            <input type="submit" value="Видалити парфум"/>
+        </form>
+        <br>
+
+        <!-- Edit perfume -->
+        <form th:if="${user.isAdmin()}" th:action="@{/perfumes/edit/{id}(id=${perfume.id})}" method="get">
+            <input type="submit" value="Редагувати парфум"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

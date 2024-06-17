@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/ico1.png" type="image/x-icon">
+    <title>Otto</title>
+</head>
+<body>
+<header id="header">
+    <nav>
+        <h1><a href="/">Otto</a></h1>
+        <h2>Панель адміністратора</h2>
+    </nav>
+</header>
+<table border="1">
+    <tr>
+        <th>Email</th>
+        <th>Телефон</th>
+        <th>Активність</th>
+        <th>Ролі</th>
+        <th>Бан</th>
+        <th>Редагувати</th>
+        <th>Детальніше</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.phone}">Телефон</td>
+        <td th:text="${user.active}">Активність</td>
+        <td>
+            <span th:each="role : ${user.roles}" th:text="${role}"></span>
+        </td>
+        <td>
+            <form th:action="@{/admin/user/ban/{id}(id=${user.id})}" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                <input type="submit" value="Бан">
+            </form>
+        </td>
+        <td><a th:href="@{/admin/user/edit/{id}(id=${user.id})}">Редагувати</a></td>
+        <td><a th:href="@{/user/{id}(id=${user.id})}">Детальніше</a></td>
+    </tr>
+</table>
+<div th:if="${#lists.isEmpty(users)}">
+    <h3>Користувачів немає</h3>
+</div>
+</body>
+</html>
