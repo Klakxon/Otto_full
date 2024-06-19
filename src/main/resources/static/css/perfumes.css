@@ -150,3 +150,93 @@ aside ul li a.selected {
     color: #fff;
     padding: 10px;
 }
+
+/*------------------------------*/
+.filter-container {
+    width: 200px;
+    padding: 15px;
+    background-color: #f8f9fa; /* Світло-сірий фон */
+    border-radius: 5px;
+    margin-right: 20px;
+    margin-left: 20px;
+    border-radius: 15px;
+    float: left; /* Розташування зліва */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container label {
+    font-weight: bold;
+}
+
+.filter-container .filter-option {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.filter-container .filter-option.selected {
+    border-radius: 10px;
+    background-color: #007bff;
+    color: white;
+    padding-left: 15px;
+}
+
+.filter-container input[type="number"],
+.filter-container select {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.filter-container button, .filter-container a {
+    font-size: 16px;
+    display: block;
+    width: 200px;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.filter-container a {
+    width: 180px;
+}
+
+.filter-container button:hover,
+.filter-container a:hover {
+    background-color: #0056b3; /* Темніший синій при наведенні */
+}
+
+
+
+.sorting-option label {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sorting-option select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.sorting-option select:hover {
+    border-color: #007bff;
+}
+
+.sorting-option select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+

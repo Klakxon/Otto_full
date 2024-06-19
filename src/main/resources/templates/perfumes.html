@@ -11,13 +11,25 @@
 
 <!-- Header -->
 <header>
-    <div class="logo">Parfum de OTTO</div>
+    <div class="logo">
+        <h1><a href="/">Otto</a></h1>
+    </div>
     <nav>
         <a href="#">Головна</a>
         <a href="#">Контакти</a>
         <a href="#">FAQs</a>
         <a href="#">Про нас</a>
-        <input type="text" placeholder="Пошук товару...">
+        <!-- Search by name -->
+        <div>
+            <form action="/perfumes" method="get">
+                <input type="hidden" name="priceSort" th:value="${priceSort}">
+                <input type="hidden" name="nameSort" th:value="${nameSort}">
+                <input type="text" id="nameSearch" name="nameSearch" placeholder="Пошук за назвою"
+                       th:value="${nameSearch}">
+                <button type="submit">Пошук</button>
+            </form>
+            <br>
+        </div>
         <div class="user-menu">
             <img src="path/to/profile-pic.jpg" alt="Профіль">
             <div class="dropdown">
@@ -30,12 +42,6 @@
                 </div>
             </div>
         </div>
-    </nav>
-</header>
-
-<header id="header">
-    <nav>
-        <h1><a href="/">Otto</a></h1>
     </nav>
 </header>
 
@@ -70,59 +76,57 @@
     <a href="/login">Вхід</a>
 </div>
 
-<!-- Search by name -->
-<div>
-    <form action="/perfumes" method="get">
-        <input type="hidden" name="priceSort" th:value="${priceSort}">
-        <input type="hidden" name="nameSort" th:value="${nameSort}">
-        <input type="text" id="nameSearch" name="nameSearch" placeholder="Пошук за назвою" th:value="${nameSearch}">
-        <button type="submit">Пошук</button>
-    </form>
-    <br>
-</div>
 
 <!-- Sorting by price -->
-Сортувати
-<div>
-    <label for="priceSort">- за ціною:</label>
-    <select id="priceSort" name="priceSort" onchange="updateUrlWithSort(this.value, 'priceSort')">
-        <option value="" th:selected="${priceSort == null}">Без сортування</option>
-        <option value="priceAsc" th:selected="${priceSort == 'priceAsc'}">За зростанням</option>
-        <option value="priceDesc" th:selected="${priceSort == 'priceDesc'}">За спаданням</option>
-    </select>
-</div>
-
-<!-- Sorting by name -->
-<div>
-    <label for="nameSort">- за назвою:</label>
-    <select id="nameSort" name="nameSort" onchange="updateUrlWithSort(this.value, 'nameSort')">
-        <option value="" th:selected="${nameSort == null}">Без сортування</option>
-        <option value="nameAsc" th:selected="${nameSort == 'nameAsc'}">За алфавітом</option>
-        <option value="nameDesc" th:selected="${nameSort == 'nameDesc'}">Проти алфавіту</option>
-    </select>
-</div>
-
-<!-- Filter -->
-<div>
-    <form action="/perfumes" method="get">
+<div class="filter-container">
+    <form id="filterForm" action="/perfumes" method="get">
         <input type="hidden" name="priceSort" th:value="${priceSort}">
         <input type="hidden" name="nameSort" th:value="${nameSort}">
+
+        <div class="sorting-container">
+            <div class="sorting-option">
+                <label for="priceSort">Сортувати за ціною:</label>
+                <select id="priceSort" name="priceSort" onchange="updateUrlWithSort(this.value, 'priceSort')">
+                    <option value="" th:selected="${priceSort == null}">Без сортування</option>
+                    <option value="priceAsc" th:selected="${priceSort == 'priceAsc'}">За зростанням</option>
+                    <option value="priceDesc" th:selected="${priceSort == 'priceDesc'}">За спаданням</option>
+                </select>
+            </div>
+
+            <div class="sorting-option">
+                <label for="nameSort">Сортувати за назвою:</label>
+                <select id="nameSort" name="nameSort" onchange="updateUrlWithSort(this.value, 'nameSort')">
+                    <option value="" th:selected="${nameSort == null}">Без сортування</option>
+                    <option value="nameAsc" th:selected="${nameSort == 'nameAsc'}">За алфавітом</option>
+                    <option value="nameDesc" th:selected="${nameSort == 'nameDesc'}">Проти алфавіту</option>
+                </select>
+            </div>
+        </div>
+
 
         <!-- Filters -->
         <div>
-            <label for="producerFilter">Країна виробник</label><br>
-            <div th:each="producerOption : ${allProducers}">
-                <input type="checkbox" id="producerFilter" name="producerFilter" th:value="${producerOption}"
-                       th:checked="${#lists.contains(selectedProducers, producerOption)}">
-                <label th:for="producerFilter" th:text="${producerOption}">Producer Filter</label><br>
+            <label>Країна виробник</label><br>
+            <div th:each="producerOption : ${allProducers}"
+                 class="filter-option"
+                 th:data-value="${producerOption}"
+                 th:classappend="${#lists.contains(selectedProducers, producerOption) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'producerFilter')">
+                <span th:text="${producerOption}">Producer Filter</span>
+                <input type="hidden" name="producerFilter" th:value="${producerOption}"
+                       th:if="${#lists.contains(selectedProducers, producerOption)}"/>
             </div>
         </div>
         <div>
-            <label for="volumeFilter">Об'єм</label><br>
-            <div th:each="volumeOption : ${allVolumes}">
-                <input type="checkbox" id="volumeFilter" name="volumeFilter" th:value="${volumeOption}"
-                       th:checked="${#lists.contains(selectedVolumes, volumeOption)}">
-                <label th:for="volumeFilter" th:text="${volumeOption}">Volume Filter</label><br>
+            <label>Об'єм</label><br>
+            <div th:each="volumeOption : ${allVolumes}"
+                 class="filter-option"
+                 th:data-value="${volumeOption}"
+                 th:classappend="${#lists.contains(selectedVolumes, volumeOption) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'volumeFilter')">
+                <span th:text="${volumeOption}">Volume Filter</span>
+                <input type="hidden" name="volumeFilter" th:value="${volumeOption}"
+                       th:if="${#lists.contains(selectedVolumes, volumeOption)}"/>
             </div>
         </div>
         <div>
@@ -132,51 +136,75 @@
             <input type="number" name="priceMaxFilter" min="0" step="0.01" th:value="${priceMax}">
         </div>
         <div>
-            <label for="sexFilter">Стать</label><br>
-            <div th:each="sexFilter : ${allSexes}">
-                <input type="checkbox" id="sexFilter" name="sexFilter" th:value="${sexFilter}"
-                       th:checked="${#lists.contains(selectedSexes, sexFilter)}">
-                <label th:for="sexFilter" th:text="${sexFilter}">Sex Filter</label><br>
+            <label>Стать</label><br>
+            <div th:each="sexFilter : ${allSexes}"
+                 class="filter-option"
+                 th:data-value="${sexFilter}"
+                 th:classappend="${#lists.contains(selectedSexes, sexFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'sexFilter')">
+                <span th:text="${sexFilter}">Sex Filter</span>
+                <input type="hidden" name="sexFilter" th:value="${sexFilter}"
+                       th:if="${#lists.contains(selectedSexes, sexFilter)}"/>
             </div>
         </div>
         <div>
-            <label for="aromaFilter">Аромат</label><br>
-            <div th:each="aromaFilter : ${allAromas}">
-                <input type="checkbox" id="aromaFilter" name="aromaFilter" th:value="${aromaFilter}"
-                       th:checked="${#lists.contains(selectedAromas, aromaFilter)}">
-                <label th:for="aromaFilter" th:text="${aromaFilter}">Aroma Filter</label><br>
+            <label>Аромат</label><br>
+            <div th:each="aromaFilter : ${allAromas}"
+                 class="filter-option"
+                 th:data-value="${aromaFilter}"
+                 th:classappend="${#lists.contains(selectedAromas, aromaFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'aromaFilter')">
+                <span th:text="${aromaFilter}">Aroma Filter</span>
+                <input type="hidden" name="aromaFilter" th:value="${aromaFilter}"
+                       th:if="${#lists.contains(selectedAromas, aromaFilter)}"/>
             </div>
         </div>
         <div>
-            <label for="saturationFilter">Насиченість</label><br>
-            <div th:each="saturationFilter : ${allSaturations}">
-                <input type="checkbox" id="saturationFilter" name="saturationFilter" th:value="${saturationFilter}"
-                       th:checked="${#lists.contains(selectedSaturations, saturationFilter)}">
-                <label th:for="saturationFilter" th:text="${saturationFilter}">Saturation Filter</label><br>
+            <label>Насиченість</label><br>
+            <div th:each="saturationFilter : ${allSaturations}"
+                 class="filter-option"
+                 th:data-value="${saturationFilter}"
+                 th:classappend="${#lists.contains(selectedSaturations, saturationFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'saturationFilter')">
+                <span th:text="${saturationFilter}">Saturation Filter</span>
+                <input type="hidden" name="saturationFilter" th:value="${saturationFilter}"
+                       th:if="${#lists.contains(selectedSaturations, saturationFilter)}"/>
             </div>
         </div>
         <div>
-            <label for="dayTimeFilter">Пора дня</label><br>
-            <div th:each="dayTimeFilter : ${allDayTimes}">
-                <input type="checkbox" id="dayTimeFilter" name="dayTimeFilter" th:value="${dayTimeFilter}"
-                       th:checked="${#lists.contains(selectedDayTimes, dayTimeFilter)}">
-                <label th:for="dayTimeFilter" th:text="${dayTimeFilter}">DayTime Filter</label><br>
+            <label>Пора дня</label><br>
+            <div th:each="dayTimeFilter : ${allDayTimes}"
+                 class="filter-option"
+                 th:data-value="${dayTimeFilter}"
+                 th:classappend="${#lists.contains(selectedDayTimes, dayTimeFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'dayTimeFilter')">
+                <span th:text="${dayTimeFilter}">DayTime Filter</span>
+                <input type="hidden" name="dayTimeFilter" th:value="${dayTimeFilter}"
+                       th:if="${#lists.contains(selectedDayTimes, dayTimeFilter)}"/>
             </div>
         </div>
         <div>
-            <label for="specificityFilter">Специфічність</label><br>
-            <div th:each="specificityFilter : ${allSpecificities}">
-                <input type="checkbox" id="specificityFilter" name="specificityFilter" th:value="${specificityFilter}"
-                       th:checked="${#lists.contains(selectedSpecificities, specificityFilter)}">
-                <label th:for="specificityFilter" th:text="${specificityFilter}">Specificity Filter</label><br>
+            <label>Специфічність</label><br>
+            <div th:each="specificityFilter : ${allSpecificities}"
+                 class="filter-option"
+                 th:data-value="${specificityFilter}"
+                 th:classappend="${#lists.contains(selectedSpecificities, specificityFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'specificityFilter')">
+                <span th:text="${specificityFilter}">Specificity Filter</span>
+                <input type="hidden" name="specificityFilter" th:value="${specificityFilter}"
+                       th:if="${#lists.contains(selectedSpecificities, specificityFilter)}"/>
             </div>
         </div>
         <div>
-            <label for="seasonFilter">Сезон</label><br>
-            <div th:each="seasonFilter : ${allSeasons}">
-                <input type="checkbox" id="seasonFilter" name="seasonFilter" th:value="${seasonFilter}"
-                       th:checked="${#lists.contains(selectedSeasons, seasonFilter)}">
-                <label th:for="seasonFilter" th:text="${seasonFilter}">Season Filter</label><br>
+            <label>Сезон</label><br>
+            <div th:each="seasonFilter : ${allSeasons}"
+                 class="filter-option"
+                 th:data-value="${seasonFilter}"
+                 th:classappend="${#lists.contains(selectedSeasons, seasonFilter) ? ' selected' : ''}"
+                 onclick="toggleFilter(this, 'seasonFilter')">
+                <span th:text="${seasonFilter}">Season Filter</span>
+                <input type="hidden" name="seasonFilter" th:value="${seasonFilter}"
+                       th:if="${#lists.contains(selectedSeasons, seasonFilter)}"/>
             </div>
         </div>
 
@@ -184,7 +212,29 @@
         <br>
         <a href="/perfumes/resetFilters">Скинути фільтри</a>
     </form>
+
 </div>
+
+<!-- Perfume list -->
+<div th:unless="${#lists.isEmpty(perfumes)}">
+    <div class="perfume-grid">
+        <div th:each="perfume : ${perfumes}" class="perfume-block">
+            <img th:src="@{/images/{id}(id=${perfume.previewImageId})}" alt="Perfume Image" height="150px"/>
+            <div class="perfume-name" th:text="${perfume.name}"></div>
+            <div class="perfume-price" th:text="${perfume.price + ' грн'}"></div>
+            <div th:if="${user.email}">
+                <form action="/cart/add" method="post">
+                    <input type="hidden" name="perfumeId" th:value="${perfume.id}">
+                    <input type="number" name="quantity" value="1" min="1">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit">Додати в кошик</button>
+                </form>
+            </div>
+            <a th:href="@{/perfumes/{id}(id=${perfume.id})}">Детальніше</a>
+        </div>
+    </div>
+</div>
+
 
 <script>
     function updateUrlWithSort(value, sortType) {
@@ -206,26 +256,33 @@
         window.location.href = url.toString();
     }
 </script>
+<script>
+    function toggleFilter(element, filterName) {
+        element.classList.toggle('selected');
+        updateHiddenInputs(element, filterName);
+    }
 
-<!-- Perfume list -->
-<div th:unless="${#lists.isEmpty(perfumes)}">
-    <div class="perfume-grid">
-        <div th:each="perfume : ${perfumes}" class="perfume-block">
-            <img th:src="@{/images/{id}(id=${perfume.previewImageId})}" alt="Perfume Image" height="150px"/>
-            <div class="perfume-name" th:text="${perfume.name}"></div>
-            <div class="perfume-price" th:text="${perfume.price + ' грн'}"></div>
-            <div th:if="${user.email}">
-                <form action="/cart/add" method="post">
-                    <input type="hidden" name="perfumeId" th:value="${perfume.id}">
-                    <input type="number" name="quantity" value="1" min="1">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit">Додати в кошик</button>
-                </form>
-            </div>
-            <a th:href="@{/perfumes/{id}(id=${perfume.id})}">Детальніше</a>
-        </div>
-    </div>
-</div>
+    function updateHiddenInputs(element, filterName) {
+        const form = document.getElementById('filterForm');
+        const value = element.getAttribute('data-value');
+
+        if (element.classList.contains('selected')) {
+            // Add hidden input
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = filterName;
+            hiddenInput.value = value;
+            form.appendChild(hiddenInput);
+        } else {
+            // Remove hidden input
+            const inputs = form.querySelectorAll(`input[type="hidden"][name="${filterName}"][value="${value}"]`);
+            inputs.forEach(input => input.remove());
+        }
+    }
+</script>
+
+
+
 
 <!-- Add perfume form-->
 <div th:if="${user.isAdmin()}">
