@@ -34,47 +34,72 @@
             <input type="number" id="amount" name="amount" min="0" required><br><br>
         </div>
         <div>
-            <label for="sex">Стать</label><br>
-            <div th:each="sexOption : ${allSexes}">
-                <input type="radio" id="sex" name="sex" th:value="${sexOption}" required>
-                <label th:for="sex" th:text="${sexOption}">Sex Option</label><br>
-            </div>
-        </div>
+            <label>Стать</label><br>
+            <input type="radio" id="sex-male" name="sex" value="Чоловічі" required>
+            <label for="sex-male">Чоловічі</label><br>
+            <input type="radio" id="sex-female" name="sex" value="Жіночі" required>
+            <label for="sex-female">Жіночі</label><br>
+            <input type="radio" id="sex-unisex" name="sex" value="Унісекс" required>
+            <label for="sex-unisex">Унісекс</label><br>
+        </div><br>
+
         <div>
-            <label for="aroma">Аромат</label><br>
-            <div th:each="aromaOption : ${allAromas}">
-                <input type="radio" id="aroma" name="aroma" th:value="${aromaOption}" required>
-                <label th:for="aroma" th:text="${aromaOption}">Aroma Option</label><br>
-            </div>
-        </div>
+            <label>Аромат</label><br>
+            <input type="radio" id="aroma-floral" name="aroma" value="Квіткові" required>
+            <label for="aroma-floral">Квіткові</label><br>
+            <input type="radio" id="aroma-citrus" name="aroma" value="Цитрусові" required>
+            <label for="aroma-citrus">Цитрусові</label><br>
+            <input type="radio" id="aroma-oriental" name="aroma" value="Східні" required>
+            <label for="aroma-oriental">Східні</label><br>
+            <input type="radio" id="aroma-woody" name="aroma" value="Деревні" required>
+            <label for="aroma-woody">Деревні</label><br>
+            <input type="radio" id="aroma-fougere" name="aroma" value="Фужерні" required>
+            <label for="aroma-fougere">Фужерні</label><br>
+        </div><br>
+
         <div>
-            <label for="saturation">Насиченість</label><br>
-            <div th:each="saturationOption : ${allSaturations}">
-                <input type="radio" id="saturation" name="saturation" th:value="${saturationOption}" required>
-                <label th:for="saturation" th:text="${saturationOption}">Saturation Option</label><br>
-            </div>
-        </div>
+            <label>Насиченість</label><br>
+            <input type="radio" id="intensity-light" name="intensity" value="Легкі" required>
+            <label for="intensity-light">Легкі</label><br>
+            <input type="radio" id="intensity-strong" name="intensity" value="Насичені" required>
+            <label for="intensity-strong">Насичені</label><br>
+            <input type="radio" id="intensity-moderate" name="intensity" value="Помірні" required>
+            <label for="intensity-moderate">Помірні</label><br>
+        </div><br>
+
         <div>
-            <label for="dayTime">Пора дня</label><br>
-            <div th:each="dayTimeOption : ${allDayTimes}">
-                <input type="radio" id="dayTime" name="dayTime" th:value="${dayTimeOption}" required>
-                <label th:for="dayTime" th:text="${dayTimeOption}">DayTime Option</label><br>
-            </div>
-        </div>
+            <label>Пора дня</label><br>
+            <input type="radio" id="timeOfDay-morning" name="timeOfDay" value="Ранок" required>
+            <label for="timeOfDay-morning">Ранок</label><br>
+            <input type="radio" id="timeOfDay-day" name="timeOfDay" value="День" required>
+            <label for="timeOfDay-day">День</label><br>
+            <input type="radio" id="timeOfDay-evening" name="timeOfDay" value="Вечір" required>
+            <label for="timeOfDay-evening">Вечір</label><br>
+        </div><br>
+
         <div>
-            <label for="specificity">Специфічність</label><br>
-            <div th:each="specificityOption : ${allSpecificities}">
-                <input type="radio" id="specificity" name="specificity" th:value="${specificityOption}" required>
-                <label th:for="specificity" th:text="${specificityOption}">Specificity Option</label><br>
-            </div>
-        </div>
+            <label>Специфічність</label><br>
+            <input type="radio" id="specificity-everyday" name="specificity" value="Повсякденні" required>
+            <label for="specificity-everyday">Повсякденні</label><br>
+            <input type="radio" id="specificity-special" name="specificity" value="Спеціальні" required>
+            <label for="specificity-special">Спеціальні</label><br>
+            <input type="radio" id="specificity-work" name="specificity" value="Робота" required>
+            <label for="specificity-work">Робота</label><br>
+            <input type="radio" id="specificity-relax" name="specificity" value="Відпочинок" required>
+            <label for="specificity-relax">Відпочинок</label><br>
+        </div><br>
+
         <div>
-            <label for="season">Сезон</label><br>
-            <div th:each="seasonOption : ${allSeasons}">
-                <input type="radio" id="season" name="season" th:value="${seasonOption}" required>
-                <label th:for="season" th:text="${seasonOption}">Season Option</label><br>
-            </div>
-        </div>
+            <label>Сезон</label><br>
+            <input type="radio" id="season-summer" name="season" value="Літо" required>
+            <label for="season-summer">Літо</label><br>
+            <input type="radio" id="season-autumn" name="season" value="Осінь" required>
+            <label for="season-autumn">Осінь</label><br>
+            <input type="radio" id="season-winter" name="season" value="Зима" required>
+            <label for="season-winter">Зима</label><br>
+            <input type="radio" id="season-spring" name="season" value="Весна" required>
+            <label for="season-spring">Весна</label><br>
+        </div><br>
         <div>
             <label for="file1">Фото 1 (головна)</label>
             <input type="file" id="file1" name="file1" required><br><br>
