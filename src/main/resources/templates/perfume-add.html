@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/perfume-edit.css">
+</head>
+<body>
+<!-- Add perfume form-->
+    <h2>Додати парфум</h2>
+    <form action="/perfumes/add" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="name">Назва</label>
+            <input type="text" id="name" name="name" required><br><br>
+        </div>
+        <div>
+            <label for="description">Опис</label>
+            <input type="text" id="description" name="description"><br><br>
+        </div>
+        <div>
+            <label for="producer">Країна виробник</label>
+            <input type="text" id="producer" name="producer" required><br><br>
+        </div>
+        <div>
+            <label for="price">Ціна</label>
+            <input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
+        </div>
+        <div>
+            <label for="volume">Об'єм</label>
+            <input type="number" id="volume" name="volume" min="0" required><br><br>
+        </div>
+        <div>
+            <label for="amount">Кількість</label>
+            <input type="number" id="amount" name="amount" min="0" required><br><br>
+        </div>
+        <div>
+            <label for="sex">Стать</label><br>
+            <div th:each="sexOption : ${allSexes}">
+                <input type="radio" id="sex" name="sex" th:value="${sexOption}" required>
+                <label th:for="sex" th:text="${sexOption}">Sex Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="aroma">Аромат</label><br>
+            <div th:each="aromaOption : ${allAromas}">
+                <input type="radio" id="aroma" name="aroma" th:value="${aromaOption}" required>
+                <label th:for="aroma" th:text="${aromaOption}">Aroma Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="saturation">Насиченість</label><br>
+            <div th:each="saturationOption : ${allSaturations}">
+                <input type="radio" id="saturation" name="saturation" th:value="${saturationOption}" required>
+                <label th:for="saturation" th:text="${saturationOption}">Saturation Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="dayTime">Пора дня</label><br>
+            <div th:each="dayTimeOption : ${allDayTimes}">
+                <input type="radio" id="dayTime" name="dayTime" th:value="${dayTimeOption}" required>
+                <label th:for="dayTime" th:text="${dayTimeOption}">DayTime Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="specificity">Специфічність</label><br>
+            <div th:each="specificityOption : ${allSpecificities}">
+                <input type="radio" id="specificity" name="specificity" th:value="${specificityOption}" required>
+                <label th:for="specificity" th:text="${specificityOption}">Specificity Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="season">Сезон</label><br>
+            <div th:each="seasonOption : ${allSeasons}">
+                <input type="radio" id="season" name="season" th:value="${seasonOption}" required>
+                <label th:for="season" th:text="${seasonOption}">Season Option</label><br>
+            </div>
+        </div>
+        <div>
+            <label for="file1">Фото 1 (головна)</label>
+            <input type="file" id="file1" name="file1" required><br><br>
+        </div>
+        <div>
+            <label for="file2">Фото 2</label>
+            <input type="file" id="file2" name="file2"><br><br>
+        </div>
+        <div>
+            <label for="file3">Фото 3</label>
+            <input type="file" id="file3" name="file3"><br><br>
+        </div>
+        <div>
+            <input type="hidden" name="_csrf" value="Додати парфум" th:value="${_csrf.token}">
+        </div>
+        <div>
+            <input type="submit" value="Додати парфум">
+        </div>
+    </form>
+<script>
+    document.getElementById('perfumeForm').addEventListener('submit', function (event) {
+        const price = document.getElementById('price').value;
+        if (price < 1) {
+            event.preventDefault();
+            alert('Ціна повинна бути не менше 1.00');
+        }
+    });
+</script>
+</body>
+</html>

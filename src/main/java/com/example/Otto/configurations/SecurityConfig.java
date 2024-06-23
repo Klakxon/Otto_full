@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/perfumes/**", "/registration", "/login", "/error", "/images/**", "/css/**", "/js/**").permitAll()
+                .antMatchers("/", "/perfumes/**", "/registration", "/login", "/contacts.html", "/error", "/images/**", "/css/**", "/js/**").permitAll()
                 .antMatchers("/cart/**").authenticated() // Require authentication for /cart/** endpoints
                 .anyRequest().authenticated()
                 .and()
@@ -56,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll();
     }
-
     /**
      * Configures authentication by specifying the custom user details service and password encoder.
      *

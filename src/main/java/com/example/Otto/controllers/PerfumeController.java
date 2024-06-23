@@ -162,7 +162,12 @@ public class PerfumeController {
         perfumeService.savePerfume(perfume, file1, file2, file3);
         return "redirect:/perfumes";
     }
-
+    @GetMapping("/perfume-add")
+    public String showAddPerfumePage(Model model) {
+        // Add attributes to the model if needed
+        // e.g., model.addAttribute("allSexes", ...);
+        return "perfume-add";
+    }
     /**
      * Handles POST requests to delete a perfume.
      *
